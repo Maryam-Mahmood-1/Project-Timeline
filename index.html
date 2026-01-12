@@ -50,7 +50,7 @@
         // =================================================================
         // CONFIGURATION: ADD YOUR PROJECT BLOCKS HERE
         // =================================================================
-        // types: 'image', 'video', 'grid', 'none'
+        // types: 'image' (supports jpg, png, gif), 'video' (mp4 files), 'youtube' (links), 'none'
         // color: 'blue', 'emerald', 'purple', 'red', 'orange', 'cyan'
         
         const timelineData = [
@@ -68,9 +68,9 @@
                 tag: "Fabrication",
                 color: "orange",
                 title: "3D Printing & Assembly",
-                description: "Fabricated link components using PLA+ and PETG for structural rigidity. Assembled servo motors with custom planetary gearboxes to increase torque output.",
+                description: "Fabricated link components using PLA+ and PETG. This supports PNGs and GIFs as well.",
                 mediaType: "image",
-                mediaSrc: "https://placehold.co/600x400/1e293b/f97316?text=Assembly+Photo"
+                mediaSrc: "https://placehold.co/600x400/1e293b/f97316?text=Assembly.png"
             },
             {
                 date: "June 2024",
@@ -79,17 +79,6 @@
                 title: "PID Controller Implementation",
                 description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
                 mediaType: "video",
-                // Example video link
-                mediaSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" 
-            },
-            {
-                date: "June 2024",
-                tag: "Control Theory",
-                color: "emerald",
-                title: "PID Controller Implementation",
-                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
-                mediaType: "video",
-                // Example video link
                 mediaSrc: "./media/e.mp4" 
             },
             {
@@ -98,8 +87,7 @@
                 color: "emerald",
                 title: "PID Controller Implementation",
                 description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
-                mediaType: "video",
-                // Example video link
+                mediaType: "image", // Corrected to 'image' for PNG
                 mediaSrc: "./media/frame_000087.png" 
             },
             {
@@ -108,8 +96,7 @@
                 color: "emerald",
                 title: "PID Controller Implementation",
                 description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
-                mediaType: "video",
-                // Example video link
+                mediaType: "image", // Corrected to 'image' for GIF
                 mediaSrc: "./media/pickp.gif" 
             },
             {
@@ -117,9 +104,9 @@
                 tag: "AI & Vision",
                 color: "purple",
                 title: "Computer Vision Integration",
-                description: "Integrated an OpenCV pipeline to detect objects in 3D space. The manipulator now calculates inverse kinematics in real-time to track and grasp moving targets.",
+                description: "Integrated an OpenCV pipeline to detect objects in 3D space. The manipulator now calculates inverse kinematics in real-time.",
                 mediaType: "none", 
-                mediaSrc: null // No media example
+                mediaSrc: null 
             },
             {
                 date: "Future Work",
@@ -147,19 +134,30 @@
             cyan: { border: 'border-cyan-500', text: 'text-cyan-400', bg: 'bg-cyan-500', shadow: 'hover:border-cyan-500/50' },
         };
 
+        // Helper to extract YouTube ID
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
         timelineData.forEach((item, index) => {
             const theme = colors[item.color] || colors.blue;
             const delay = (index + 1) * 100; // Stagger animation
             
             // Build Media HTML
             let mediaHtml = '';
+            
             if (item.mediaType === 'image') {
+                // Works for jpg, png, gif
                 mediaHtml = `
                     <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all">
                         <img src="${item.mediaSrc}" alt="${item.title}" loading="lazy" 
                              class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500">
                     </div>`;
-            } else if (item.mediaType === 'video') {
+            } 
+            else if (item.mediaType === 'video') {
+                // For direct .mp4 files
                 mediaHtml = `
                     <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 relative aspect-video bg-black">
                         <video controls class="w-full h-full" preload="metadata">
@@ -167,6 +165,23 @@
                             Your browser does not support the video tag.
                         </video>
                     </div>`;
+            }
+            else if (item.mediaType === 'youtube') {
+                // For YouTube Links
+                const videoId = getYouTubeId(item.mediaSrc);
+                if (videoId) {
+                    mediaHtml = `
+                        <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 relative aspect-video bg-black">
+                            <iframe 
+                                class="w-full h-full" 
+                                src="https://www.youtube.com/embed/${videoId}" 
+                                title="${item.title}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>`;
+                }
             }
 
             // Build HTML
