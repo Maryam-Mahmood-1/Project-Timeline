@@ -120,7 +120,6 @@
                 // Paste the full YouTube link here:
                 mediaSrc: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" 
             },
-            
             {
                 date: "Future Work",
                 tag: "Deployment",
@@ -130,8 +129,6 @@
                 mediaType: "image",
                 mediaSrc: "https://placehold.co/600x400/1e293b/ef4444?text=Final+System"
             }
-            
-            
         ];
 
         // =================================================================
@@ -160,14 +157,11 @@
             const theme = colors[item.color] || colors.blue;
             
             let mediaHtml = '';
-            
-            // Added onerror handler for debugging image paths
             if (item.mediaType === 'image') {
                 mediaHtml = `
-                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all bg-slate-900/50">
+                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all">
                         <img src="${item.mediaSrc}" alt="${item.title}" loading="lazy" 
-                             class="w-full h-auto"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'p-4 text-center text-red-400 text-xs\'>File not found:<br>' + this.getAttribute('src') + '</div>'">
+                             class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500">
                     </div>`;
             } else if (item.mediaType === 'video') {
                 mediaHtml = `
