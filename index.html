@@ -147,11 +147,14 @@
             const theme = colors[item.color] || colors.blue;
             
             let mediaHtml = '';
+            
+            // Added onerror handler for debugging image paths
             if (item.mediaType === 'image') {
                 mediaHtml = `
-                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all">
+                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all bg-slate-900/50">
                         <img src="${item.mediaSrc}" alt="${item.title}" loading="lazy" 
-                             class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500">
+                             class="w-full h-auto"
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'p-4 text-center text-red-400 text-xs\'>File not found:<br>' + this.getAttribute('src') + '</div>'">
                     </div>`;
             } else if (item.mediaType === 'video') {
                 mediaHtml = `
