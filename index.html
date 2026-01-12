@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-DOF Manipulator | Project Timeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 font-sans selection:bg-blue-500 selection:text-white">
+
+    <!-- Hero Section -->
+    <header class="py-20 text-center px-4 bg-slate-900 border-b border-slate-800">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4">
+            7-DOF Manipulator
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+            Design, Fabrication, and AI-driven Control of a Robotic Arm.
+        </p>
+    </header>
+
+    <!-- Timeline Container -->
+    <main class="max-w-5xl mx-auto px-4 py-16">
+        <!-- The vertical line is part of this container wrapper -->
+        <div id="timeline-container" class="relative space-y-12 md:space-y-24 before:absolute before:inset-0 before:ml-5 md:before:mx-auto md:before:translate-x-px md:before:h-full md:before:w-0.5 md:before:bg-gradient-to-b md:before:from-transparent md:before:via-slate-700 md:before:to-transparent before:w-0.5 before:bg-slate-700 before:h-full before:left-0 md:before:left-1/2">
+            <!-- Timeline items will be injected here by JavaScript -->
+        </div>
+    </main>
+
+    <footer class="py-8 text-center text-slate-600 text-sm border-t border-slate-800 bg-slate-950">
+        <p>&copy; 2024 Project Portfolio. Hosted on GitHub Pages.</p>
+    </footer>
+
+    <!-- DATA & LOGIC -->
+    <script>
+        // =================================================================
+        // CONFIGURATION: ADD YOUR PROJECT BLOCKS HERE
+        // =================================================================
+        // types: 'image', 'video', 'grid', 'none'
+        // color: 'blue', 'emerald', 'purple', 'red', 'orange', 'cyan'
+        
+        const timelineData = [
+            {
+                date: "Jan 2024 - Mar 2024",
+                tag: "Design Phase",
+                color: "blue", 
+                title: "Kinematic Analysis & CAD Design",
+                description: "Defined the Denavit-Hartenberg parameters for the 7 degrees of freedom. Completed the full mechanical design in SolidWorks, focusing on minimizing joint torque requirements.",
+                mediaType: "image",
+                mediaSrc: "https://placehold.co/600x400/1e293b/3b82f6?text=CAD+Render+Snapshot"
+            },
+            {
+                date: "Apr 2024 - May 2024",
+                tag: "Fabrication",
+                color: "orange",
+                title: "3D Printing & Assembly",
+                description: "Fabricated link components using PLA+ and PETG for structural rigidity. Assembled servo motors with custom planetary gearboxes to increase torque output.",
+                mediaType: "image",
+                mediaSrc: "https://placehold.co/600x400/1e293b/f97316?text=Assembly+Photo"
+            },
+            {
+                date: "June 2024",
+                tag: "Control Theory",
+                color: "emerald",
+                title: "PID Controller Implementation",
+                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
+                mediaType: "video",
+                // Example video link
+                mediaSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" 
+            },
+            {
+                date: "July 2024 - Present",
+                tag: "AI & Vision",
+                color: "purple",
+                title: "Computer Vision Integration",
+                description: "Integrated an OpenCV pipeline to detect objects in 3D space. The manipulator now calculates inverse kinematics in real-time to track and grasp moving targets.",
+                mediaType: "none", 
+                mediaSrc: null // No media example
+            },
+            {
+                date: "Future Work",
+                tag: "Deployment",
+                color: "red",
+                title: "Final System Testing",
+                description: "Showcasing the complete pick-and-place operation with obstacle avoidance.",
+                mediaType: "image",
+                mediaSrc: "https://placehold.co/600x400/1e293b/ef4444?text=Final+System"
+            }
+        ];
+
+        // =================================================================
+        // RENDER LOGIC (DO NOT EDIT UNLESS YOU KNOW JS)
+        // =================================================================
+        
+        const container = document.getElementById('timeline-container');
+
+        const colors = {
+            blue: { border: 'border-blue-500', text: 'text-blue-400', bg: 'bg-blue-500', shadow: 'hover:border-blue-500/50' },
+            emerald: { border: 'border-emerald-500', text: 'text-emerald-400', bg: 'bg-emerald-500', shadow: 'hover:border-emerald-500/50' },
+            purple: { border: 'border-purple-500', text: 'text-purple-400', bg: 'bg-purple-500', shadow: 'hover:border-purple-500/50' },
+            red: { border: 'border-red-500', text: 'text-red-400', bg: 'bg-red-500', shadow: 'hover:border-red-500/50' },
+            orange: { border: 'border-orange-500', text: 'text-orange-400', bg: 'bg-orange-500', shadow: 'hover:border-orange-500/50' },
+            cyan: { border: 'border-cyan-500', text: 'text-cyan-400', bg: 'bg-cyan-500', shadow: 'hover:border-cyan-500/50' },
+        };
+
+        timelineData.forEach((item, index) => {
+            const theme = colors[item.color] || colors.blue;
+            const delay = (index + 1) * 100; // Stagger animation
+            
+            // Build Media HTML
+            let mediaHtml = '';
+            if (item.mediaType === 'image') {
+                mediaHtml = `
+                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all">
+                        <img src="${item.mediaSrc}" alt="${item.title}" loading="lazy" 
+                             class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500">
+                    </div>`;
+            } else if (item.mediaType === 'video') {
+                mediaHtml = `
+                    <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 relative aspect-video bg-black">
+                        <video controls class="w-full h-full" preload="metadata">
+                            <source src="${item.mediaSrc}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>`;
+            }
+
+            // Build HTML
+            const html = `
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group fade-in-up" style="animation-delay: ${delay}ms">
+                    
+                    <!-- Number Badge/Dot -->
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-900 ${theme.bg} shadow text-slate-900 font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 absolute left-0 md:static">
+                        ${index + 1}
+                    </div>
+                    
+                    <!-- Content Card -->
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-14 md:ml-0 p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-lg ${theme.shadow} transition-colors">
+                        <div class="flex flex-wrap items-center justify-between mb-2 gap-2">
+                            <span class="text-sm font-mono ${theme.text}">${item.date}</span>
+                            <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-300 uppercase tracking-wide">${item.tag}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">${item.title}</h3>
+                        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+                            ${item.description}
+                        </p>
+                        
+                        ${mediaHtml}
+                    </div>
+                </div>
+            `;
+            
+            // Append to container
+            container.innerHTML += html;
+        });
+    </script>
+</body>
+</html>
