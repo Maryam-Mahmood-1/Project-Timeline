@@ -72,33 +72,35 @@
                 mediaType: "image",
                 mediaSrc: "https://placehold.co/600x400/1e293b/f97316?text=Assembly.png"
             },
+            // --- PARALLEL BLOCKS DEMO (Same Date) ---
             {
                 date: "June 2024",
                 tag: "Control Theory",
                 color: "emerald",
-                title: "PID Controller Implementation",
-                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
+                title: "PID Controller",
+                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot.",
                 mediaType: "video",
                 mediaSrc: "./media/e.mp4" 
             },
             {
                 date: "June 2024",
                 tag: "ABC Theory",
-                color: "emerald",
-                title: "PID Controller Implementation",
-                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
-                mediaType: "image", // Corrected to 'image' for PNG
+                color: "cyan",
+                title: "Trajectory Planning",
+                description: "Implemented cubic spline interpolation for smooth path generation between waypoints.",
+                mediaType: "image",
                 mediaSrc: "./media/frame_000087.png" 
             },
             {
                 date: "June 2024",
                 tag: "ABC Tnhry",
                 color: "emerald",
-                title: "PID Controller Implementation",
-                description: "Developed a low-level PID control loop running on an ESP32. Tuned gains to reduce overshoot during rapid movements.",
-                mediaType: "image", // Corrected to 'image' for GIF
+                title: "Grasping Logic",
+                description: "Logic for force-sensitive grasping using current feedback from the gripper servo.",
+                mediaType: "image", 
                 mediaSrc: "./media/pickp.gif" 
             },
+            // --- END PARALLEL BLOCKS ---
             {
                 date: "July 2024 - Present",
                 tag: "AI & Vision",
@@ -120,7 +122,7 @@
         ];
 
         // =================================================================
-        // RENDER LOGIC (DO NOT EDIT UNLESS YOU KNOW JS)
+        // RENDER LOGIC (UPDATED FOR PARALLEL LAYOUT)
         // =================================================================
         
         const container = document.getElementById('timeline-container');
@@ -134,30 +136,24 @@
             cyan: { border: 'border-cyan-500', text: 'text-cyan-400', bg: 'bg-cyan-500', shadow: 'hover:border-cyan-500/50' },
         };
 
-        // Helper to extract YouTube ID
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        timelineData.forEach((item, index) => {
+        // Helper to generate the internal HTML of a card
+        function getCardContent(item) {
             const theme = colors[item.color] || colors.blue;
-            const delay = (index + 1) * 100; // Stagger animation
             
-            // Build Media HTML
             let mediaHtml = '';
-            
             if (item.mediaType === 'image') {
-                // Works for jpg, png, gif
                 mediaHtml = `
                     <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 group-hover:shadow-lg transition-all">
                         <img src="${item.mediaSrc}" alt="${item.title}" loading="lazy" 
                              class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500">
                     </div>`;
-            } 
-            else if (item.mediaType === 'video') {
-                // For direct .mp4 files
+            } else if (item.mediaType === 'video') {
                 mediaHtml = `
                     <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 relative aspect-video bg-black">
                         <video controls class="w-full h-full" preload="metadata">
@@ -165,53 +161,120 @@
                             Your browser does not support the video tag.
                         </video>
                     </div>`;
-            }
-            else if (item.mediaType === 'youtube') {
-                // For YouTube Links
+            } else if (item.mediaType === 'youtube') {
                 const videoId = getYouTubeId(item.mediaSrc);
                 if (videoId) {
                     mediaHtml = `
                         <div class="mt-4 rounded-lg overflow-hidden border border-slate-700 relative aspect-video bg-black">
-                            <iframe 
-                                class="w-full h-full" 
-                                src="https://www.youtube.com/embed/${videoId}" 
-                                title="${item.title}" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" title="${item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>`;
                 }
             }
 
-            // Build HTML
-            const html = `
-                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group fade-in-up" style="animation-delay: ${delay}ms">
-                    
-                    <!-- Number Badge/Dot -->
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-900 ${theme.bg} shadow text-slate-900 font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 absolute left-0 md:static">
-                        ${index + 1}
+            return `
+                <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-lg ${theme.shadow} transition-colors group h-full">
+                    <div class="flex flex-wrap items-center justify-between mb-2 gap-2">
+                        <span class="text-sm font-mono ${theme.text}">${item.date}</span>
+                        <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-300 uppercase tracking-wide">${item.tag}</span>
                     </div>
-                    
-                    <!-- Content Card -->
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-14 md:ml-0 p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-lg ${theme.shadow} transition-colors">
-                        <div class="flex flex-wrap items-center justify-between mb-2 gap-2">
-                            <span class="text-sm font-mono ${theme.text}">${item.date}</span>
-                            <span class="text-xs font-bold px-2 py-1 rounded bg-slate-700 text-slate-300 uppercase tracking-wide">${item.tag}</span>
-                        </div>
-                        
-                        <h3 class="text-xl font-bold text-white mb-2">${item.title}</h3>
-                        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
-                            ${item.description}
-                        </p>
-                        
-                        ${mediaHtml}
-                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">${item.title}</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm md:text-base">${item.description}</p>
+                    ${mediaHtml}
                 </div>
             `;
+        }
+
+        // 1. Group data by date
+        const groupedData = [];
+        timelineData.forEach(item => {
+            const lastGroup = groupedData[groupedData.length - 1];
+            if (lastGroup && lastGroup.date === item.date) {
+                lastGroup.items.push(item);
+            } else {
+                groupedData.push({ date: item.date, items: [item] });
+            }
+        });
+
+        // 2. Render logic
+        let globalIndex = 1;
+        let isLeftSide = true; // Track side for single items (True = Left, False = Right)
+
+        groupedData.forEach(group => {
+            const items = group.items;
             
-            // Append to container
-            container.innerHTML += html;
+            // Iterate through group items in chunks of 2
+            for (let i = 0; i < items.length; i += 2) {
+                const item1 = items[i];
+                const item2 = items[i+1]; // May be undefined if group has odd number of items
+
+                const delay = globalIndex * 100;
+
+                if (item2) {
+                    // --- PARALLEL ROW (Two Items sharing the row) ---
+                    const theme1 = colors[item1.color] || colors.blue;
+                    const theme2 = colors[item2.color] || colors.blue;
+
+                    const rowHtml = `
+                        <div class="relative flex flex-col md:flex-row items-stretch md:items-start justify-between w-full mb-12 fade-in-up" style="animation-delay: ${delay}ms">
+                            
+                            <!-- Left Item -->
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-14 md:ml-0 mb-8 md:mb-0">
+                                ${getCardContent(item1)}
+                            </div>
+
+                            <!-- Center Dots -->
+                            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 flex flex-col gap-3 z-10 pt-6 md:pt-0">
+                                <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-900 ${theme1.bg} shadow text-slate-900 font-bold shrink-0">
+                                    ${globalIndex}
+                                </div>
+                                <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-900 ${theme2.bg} shadow text-slate-900 font-bold shrink-0">
+                                    ${globalIndex + 1}
+                                </div>
+                            </div>
+
+                            <!-- Right Item -->
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-14 md:ml-0">
+                                ${getCardContent(item2)}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += rowHtml;
+                    globalIndex += 2;
+                    isLeftSide = true; // Reset to left for next single item usually looks best after a full row
+
+                } else {
+                    // --- SINGLE ROW (Standard Zig-Zag) ---
+                    const theme = colors[item1.color] || colors.blue;
+                    
+                    // Determine alignment based on 'isLeftSide' state
+                    const flexClass = isLeftSide ? 'md:flex-row' : 'md:flex-row-reverse';
+                    
+                    // On mobile, it always stacks: Dot (abs left) -> Card (ml-14). 
+                    // On desktop, we need spacing logic.
+                    // Structure: Spacer - Center - Card
+                    
+                    const singleHtml = `
+                         <div class="relative flex flex-col ${flexClass} items-center w-full mb-12 md:justify-between fade-in-up" style="animation-delay: ${delay}ms">
+                            
+                            <!-- Spacer (Hidden on Mobile) -->
+                            <div class="w-full md:w-[calc(50%-2.5rem)] hidden md:block"></div>
+                            
+                            <!-- Dot (Center) -->
+                            <div class="absolute left-0 md:left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-900 ${theme.bg} shadow text-slate-900 font-bold shrink-0">
+                                ${globalIndex}
+                            </div>
+                            
+                            <!-- Content Card -->
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-14 md:ml-0">
+                                ${getCardContent(item1)}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += singleHtml;
+                    globalIndex += 1;
+                    isLeftSide = !isLeftSide; // Flip side for next single item
+                }
+            }
         });
     </script>
 </body>
